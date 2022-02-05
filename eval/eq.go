@@ -1,7 +1,6 @@
 package eval
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
 )
@@ -20,7 +19,7 @@ func (eq Eq) Eval() (bool, error) {
 		valResolved := val.Resolve()
 		valType := reflect.TypeOf(valResolved)
 		if valType != firstValType {
-			return false, errors.New(fmt.Sprintf("The type of the value at index %v does not match the type of the value at index 0.", i))
+			return false, fmt.Errorf("type of the value at index %v does not match the type of the value at index 0", i)
 		}
 		if valResolved != firstVal {
 			return false, nil
