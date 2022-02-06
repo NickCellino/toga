@@ -2,28 +2,20 @@ package eval
 
 import (
 	"fmt"
-	"reflect"
 )
 
 type Eq struct {
-	args []Resolvable
+	args []Expression
 }
 
-func (eq Eq) Eval() (bool, error) {
+func (eq Eq) Eval(context Context) (Value, error) {
 	if len(eq.args) == 0 {
-		return true, nil
+		return BoolValue{true}, nil
 	}
-	firstVal := eq.args[0].Resolve()
-	firstValType := reflect.TypeOf(firstVal)
-	for i, val := range eq.args[1:] {
-		valResolved := val.Resolve()
-		valType := reflect.TypeOf(valResolved)
-		if valType != firstValType {
-			return false, fmt.Errorf("type of the value at index %v does not match the type of the value at index 0", i)
-		}
-		if valResolved != firstVal {
-			return false, nil
-		}
+	_, err := eq.args[0].Eval(context)
+	if err != nil {
+		return BoolValue{false}, fmt.Errorf("error evaluating arg 0 of Eq")
 	}
-	return true, nil
+	// TODO
+	return BoolValue{true}, nil
 }

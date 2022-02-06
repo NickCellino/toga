@@ -1,22 +1,14 @@
 package eval
 
-type Comparable interface {
-	Compare()
+type Expression interface {
+	Eval(context Context) (Value, error)
 }
 
-type Evalable interface {
-	Eval() (bool, error)
+type Value interface {
+	Expression
+	AsNumber() (float64, error)
+	AsBool() (bool, error)
+	AsString() (string, error)
 }
 
-type Resolvable interface {
-	Resolve() interface{}
-}
-
-func Eval(rules []Evalable) bool {
-	for _, rule := range rules {
-		if result, _ := rule.Eval(); !result {
-			return false
-		}
-	}
-	return true
-}
+type Context map[string]interface{}
