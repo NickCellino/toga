@@ -9,6 +9,7 @@ type Value interface {
 	AsNumber() (float64, error)
 	AsBool() (bool, error)
 	AsString() (string, error)
+	Eq(Value) (bool, error)
 }
 
 type Context map[string]interface{}
