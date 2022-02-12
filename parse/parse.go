@@ -1,7 +1,6 @@
 package parse
 
 import (
-	"errors"
 	"fmt"
 	"toga/eval"
 )
@@ -17,12 +16,30 @@ func Operations() map[string]ExpressionFactory {
 }
 
 func ConvertToAst(rawExpression interface{}) (eval.Expression, error) {
-	fmt.Println(rawExpression)
-	expressionMap, _ := rawExpression.(map[string]interface{})
-	_, in := expressionMap["op"]
-	if !in {
-		return nil, errors.New("expression should contain top level 'op' key")
+	switch expression := rawExpression.(type) {
+	case map[string]interface{}:
+		value, in := expression["eq"]
+		if in {
+			args, ok := value.([]interface{})
+			if !ok {
+				return nil, fmt.Errorf("argument to eq operator should be an array, instead got: %v", value)
+			}
+			parsedArgs := []eval.Expression{}
+			for _, arg := range args {
+				parsedArg, err := ConvertToAst(arg)
+				if err != nil {
+					return nil, err
+				}
+				parsedArgs = append(parsedArgs, parsedArg)
+			}
+			return eval.Eq{Args: parsedArgs}, nil
+		}
+	case string:
+		return eval.StringValue{Val: expression}, nil
+	case float64:
+		return eval.NumberValue{Val: expression}, nil
+	case bool:
+		return eval.BoolValue{Val: expression}, nil
 	}
-	fmt.Println("expr map: ", expressionMap)
-	return nil, nil
+	return nil, fmt.Errorf("we don't know how to parse '%v'", rawExpression)
 }

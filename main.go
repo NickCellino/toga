@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"toga/eval"
 	"toga/parse"
 
 	"github.com/mitchellh/cli"
@@ -36,6 +37,13 @@ func (c EvalCommand) Run(args []string) int {
 		fmt.Printf("Received error: %v\n", err)
 	}
 	fmt.Println("parsed rule expression: ", ruleExpression)
+
+	value, err := ruleExpression.Eval(eval.Context{})
+	if err != nil {
+		fmt.Printf("Got error: %v", value)
+		return 1
+	}
+	fmt.Printf("Got value: %v\n", value)
 
 	return 0
 }
