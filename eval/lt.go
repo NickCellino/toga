@@ -11,17 +11,21 @@ type Lt struct {
 
 func (lt Lt) Eval(context Context) (Value, error) {
 	firstVal, err := lt.first.Eval(context)
+	if err != nil {
+		return nil, err
+	}
 	first, err := firstVal.AsNumber()
 	if err != nil {
-		fmt.Errorf("Lt expected first argument to evaluate to a number")
-		return BoolValue{false}, err
+		return nil, fmt.Errorf("error evaluating %v, first arg %v is not a number", lt, firstVal)
 	}
 
 	secondVal, err := lt.second.Eval(context)
+	if err != nil {
+		return nil, err
+	}
 	second, err := secondVal.AsNumber()
 	if err != nil {
-		fmt.Errorf("Lt expected second argument to evaluate to a number")
-		return BoolValue{false}, err
+		return nil, fmt.Errorf("error evaluating %v, second arg %v is not a number", lt, secondVal)
 	}
 
 	return BoolValue{first < second}, nil

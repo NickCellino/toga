@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"fmt"
+	"log"
 	"os"
 	"toga/eval"
 	"toga/parse"
@@ -14,7 +14,7 @@ import (
 type EvalCommand struct{}
 
 func (EvalCommand) Synopsis() string {
-	return "Welcome to the eval command."
+	return "evaluates a rule"
 }
 
 func (ec EvalCommand) Name() string {
@@ -29,27 +29,34 @@ func (c EvalCommand) Run(args []string) int {
 	flagSet.StringVar(&context, "context", "", "")
 	flagSet.Parse(args)
 
-	fmt.Println("rule received by eval:", rule)
+	logger := log.Default()
+	logger.Printf("evaluating: %v", rule)
 	var data interface{}
 	json.Unmarshal([]byte(rule), &data)
+	if data == nil {
+		logger.Fatalf("invalid json: %v\n", rule)
+	}
 	ruleExpression, err := parse.ConvertToAst(data)
 	if err != nil {
-		fmt.Printf("Received error: %v\n", err)
+		logger.Fatalf("received error: %v\n", err)
 	}
-	fmt.Println("parsed rule expression: ", ruleExpression)
+	logger.Printf("parsed rule expression: %v", ruleExpression)
 
 	value, err := ruleExpression.Eval(eval.Context{})
 	if err != nil {
-		fmt.Printf("Got error: %v", value)
-		return 1
+		logger.Fatalf("received error: %v\n", err)
 	}
-	fmt.Printf("Got value: %v\n", value)
+	logger.Printf("output: %v\n", value)
 
 	return 0
 }
 
-func (EvalCommand) Help() string {
-	return "sorry, no help here hombre."
+func (c EvalCommand) Help() string {
+	return `Usage:
+toga eval -rule=<rule>
+
+  Evaluates the provided rule.
+`
 }
 
 func main() {
@@ -60,9 +67,6 @@ func main() {
 			return EvalCommand{}, nil
 		},
 	}
-	exitStatus, err := c.Run()
-	if err != nil {
-		fmt.Println("There was an error!!", err)
-	}
+	exitStatus, _ := c.Run()
 	os.Exit(exitStatus)
 }

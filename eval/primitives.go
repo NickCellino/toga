@@ -75,3 +75,9 @@ func (b BoolValue) Eq(other Value) (bool, error) {
 	}
 	return b.Val == otherAsBool, nil
 }
+func (b BoolValue) String() string {
+	if b.Val {
+		return "true"
+	}
+	return "false"
+}
