@@ -12,4 +12,4 @@ type Value interface {
 	Eq(Value) (bool, error)
 }
 
-type Context map[string]interface{}
+type Context map[string]Expression

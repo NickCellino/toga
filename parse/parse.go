@@ -34,6 +34,18 @@ func ConvertToAst(rawExpression interface{}) (eval.Expression, error) {
 			}
 			return eval.Eq{Args: parsedArgs}, nil
 		}
+		value, in = expression["context"]
+		if in {
+			rawArg, ok := value.(string)
+			if !ok {
+				return nil, fmt.Errorf("argument to context operator should be string, instead got: %v", value)
+			}
+			arg, err := ConvertToAst(rawArg)
+			if err != nil {
+				return nil, err
+			}
+			return eval.ContextExpression{Key: arg}, nil
+		}
 	case string:
 		return eval.StringValue{Val: expression}, nil
 	case float64:
@@ -42,4 +54,16 @@ func ConvertToAst(rawExpression interface{}) (eval.Expression, error) {
 		return eval.BoolValue{Val: expression}, nil
 	}
 	return nil, fmt.Errorf("we don't know how to parse '%v'", rawExpression)
+}
+
+func ParseContext(rawContext map[string]interface{}) (eval.Context, error) {
+	parsedContext := eval.Context{}
+	for key, val := range rawContext {
+		expr, err := ConvertToAst(val)
+		if err != nil {
+			return nil, fmt.Errorf("error parsing context key %v. error: %v", key, err)
+		}
+		parsedContext[key] = expr
+	}
+	return parsedContext, nil
 }
