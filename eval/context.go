@@ -1,5 +1,7 @@
 package eval
 
+import "fmt"
+
 type ContextExpression struct {
 	Key Expression
 }
@@ -13,5 +15,9 @@ func (contextExpr ContextExpression) Eval(context Context) (Value, error) {
 	if err != nil {
 		return nil, err
 	}
-	return context[keyStr].Eval(context)
+	contextVal, in := context[keyStr]
+	if !in {
+		return nil, fmt.Errorf("value '%v' not specified in context", keyStr)
+	}
+	return contextVal.Eval(context)
 }

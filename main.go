@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"flag"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"toga/eval"
@@ -23,13 +25,18 @@ func (ec EvalCommand) Name() string {
 
 func (c EvalCommand) Run(args []string) int {
 	var ruleStr, contextStr string
+	var verbose bool
 
 	flagSet := flag.NewFlagSet(c.Name(), flag.ContinueOnError)
 	flagSet.StringVar(&ruleStr, "rule", "", "")
 	flagSet.StringVar(&contextStr, "context", "", "")
+	flagSet.BoolVar(&verbose, "verbose", false, "")
 	flagSet.Parse(args)
 
 	logger := log.Default()
+	if !verbose {
+		logger.SetOutput(ioutil.Discard)
+	}
 	logger.Printf("evaluating: %v", ruleStr)
 	var rule interface{}
 	err := json.Unmarshal([]byte(ruleStr), &rule)
@@ -62,14 +69,34 @@ func (c EvalCommand) Run(args []string) int {
 	}
 	logger.Printf("output: %v\n", value)
 
+	rawValue, err := value.AsBool()
+	if err != nil {
+		logger.Fatalf("error serializing result value: %v\n", err)
+	}
+
+	output, err := json.Marshal(rawValue)
+	if err != nil {
+		logger.Fatalf("error marshalling json output: %v\n", err)
+	}
+	fmt.Println(string(output))
+
 	return 0
 }
 
 func (c EvalCommand) Help() string {
 	return `Usage:
-toga eval -rule=<rule>
+toga eval -rule=<rule-json> -context=<context-json>
 
   Evaluates the provided rule.
+
+  -rule <rule-json>
+  The JSON rule to evaluate
+
+  -context <context-json>
+  The JSON context to use to evaluate the rule (default '{}')
+
+  -verbose
+  Whether to output verbose logging to stderr
 `
 }
 
