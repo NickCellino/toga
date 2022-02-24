@@ -23,6 +23,26 @@ func ParseArgList(arg interface{}) ([]eval.Expression, error) {
 	return parsedArgs, nil
 }
 
+func ParseMap(arg interface{}, expectedArgKeys []string) (map[string]eval.Expression, error) {
+	argMap, ok := arg.(map[string]interface{})
+	if !ok {
+		return nil, fmt.Errorf("cannot parse %v as a map", arg)
+	}
+	args := map[string]eval.Expression{}
+	for _, argName := range expectedArgKeys {
+		rawValue, in := argMap[argName]
+		if !in {
+			return nil, fmt.Errorf("%v is missing expected arg %v", arg, argName)
+		}
+		value, err := ConvertToAst(rawValue)
+		if err != nil {
+			return nil, err
+		}
+		args[argName] = value
+	}
+	return args, nil
+}
+
 func ConvertToAst(rawExpression interface{}) (eval.Expression, error) {
 	var keywords = map[string]ExpressionParser{
 		"eq": func(exp interface{}) (eval.Expression, error) {
@@ -56,6 +76,13 @@ func ConvertToAst(rawExpression interface{}) (eval.Expression, error) {
 				return nil, err
 			}
 			return eval.And{Args: parsedArgs}, nil
+		},
+		"if": func(exp interface{}) (eval.Expression, error) {
+			parsedArgs, err := ParseMap(exp, []string{"condition", "then", "else"})
+			if err != nil {
+				return nil, err
+			}
+			return eval.If{Condition: parsedArgs["condition"], Then: parsedArgs["then"], Else: parsedArgs["else"]}, nil
 		},
 	}
 
