@@ -1,3 +1,16 @@
 {
-  "context": "color"
+  "or": [
+    {
+      "eq": [
+        {"context": "role"},
+        "manager"
+      ]
+    },
+    {
+      "eq": [
+        {"context": "region"},
+        "buffalo"
+      ]
+    }
+  ]
 }

@@ -1,6 +1,8 @@
 package eval
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Eq struct {
 	Args []Expression

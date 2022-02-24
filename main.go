@@ -47,7 +47,6 @@ func (c EvalCommand) Run(args []string) int {
 	if err != nil {
 		logger.Fatalf("received error: %v\n", err)
 	}
-	logger.Printf("parsed rule expression: %v", ruleExpression)
 
 	var context map[string]interface{}
 	contextExpression := eval.Context{}
@@ -56,7 +55,7 @@ func (c EvalCommand) Run(args []string) int {
 		if err != nil {
 			logger.Fatalf("error unmarshalling context json: %v\n", err)
 		}
-		logger.Printf("parsed context: %v", context)
+		logger.Printf("with context: %v", contextStr)
 		contextExpression, err = parse.ParseContext(context)
 		if err != nil {
 			logger.Fatalf("error parsing context: %v\n", err)
