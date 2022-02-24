@@ -8,7 +8,7 @@ This is an educational exercise. As such, I didn't think _too_ hard about the pr
 
 This can be used to store configuration data when you require something more dynamic than a static key/value mapping. Feature flags are one use case for something like this.
 
-For example, let's say you just added a new feature to your To-do list application which allows users to create multiple lists. This may have been a very complex feature and you would like to only show it to a subset of your users at first to make sure that everything is working correctly. For such a situation, you may create a rule like this:
+For example, let's say you just added a new feature to your application. This may have been a very complex feature and you would like to only show it to a subset of your users at first to make sure that everything is working correctly. For such a situation, you may create a rule like this:
 ```javascript
 {
   "eq": [
