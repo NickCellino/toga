@@ -1,7 +1,0 @@
-{
-  "if": {
-    "condition": true,
-    "then": "blue",
-    "else": "green"
-  }
-}

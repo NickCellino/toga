@@ -1,0 +1,27 @@
+{
+  "if": {
+    "condition": {
+      "eq": [
+        {
+          "context": "name"
+        },
+        "nick"
+      ]
+    },
+    "then": "blue",
+    "else": {
+      "if": {
+        "condition": {
+          "eq": [
+            {
+              "context": "name"
+            },
+            "fred"
+          ]
+        },
+        "then": "green",
+        "else": "nope"
+      }
+    }
+  }
+}
