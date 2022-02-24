@@ -10,6 +10,7 @@ type Value interface {
 	AsBool() (bool, error)
 	AsString() (string, error)
 	Eq(Value) (bool, error)
+	MarshalJSON() ([]byte, error)
 }
 
 type Context map[string]Expression

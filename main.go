@@ -68,12 +68,7 @@ func (c EvalCommand) Run(args []string) int {
 	}
 	logger.Printf("output: %v\n", value)
 
-	rawValue, err := value.AsBool()
-	if err != nil {
-		logger.Fatalf("error serializing result value: %v\n", err)
-	}
-
-	output, err := json.Marshal(rawValue)
+	output, err := json.Marshal(value)
 	if err != nil {
 		logger.Fatalf("error marshalling json output: %v\n", err)
 	}

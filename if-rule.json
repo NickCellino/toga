@@ -1,6 +1,6 @@
 {
   "if": {
-    "condition": false,
+    "condition": true,
     "then": "blue",
     "else": "green"
   }

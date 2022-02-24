@@ -1,6 +1,7 @@
 package eval
 
 import (
+	"encoding/json"
 	"errors"
 )
 
@@ -27,6 +28,9 @@ func (n NumberValue) Eq(other Value) (bool, error) {
 	}
 	return n.Val == otherAsNumber, nil
 }
+func (n NumberValue) MarshalJSON() ([]byte, error) {
+	return json.Marshal(n.Val)
+}
 
 type StringValue struct {
 	Val string
@@ -50,6 +54,9 @@ func (s StringValue) Eq(other Value) (bool, error) {
 		return false, errors.New("incompatible types")
 	}
 	return s.Val == otherAsString, nil
+}
+func (s StringValue) MarshalJSON() ([]byte, error) {
+	return json.Marshal(s.Val)
 }
 
 type BoolValue struct {
@@ -80,4 +87,7 @@ func (b BoolValue) String() string {
 		return "true"
 	}
 	return "false"
+}
+func (b BoolValue) MarshalJSON() ([]byte, error) {
+	return json.Marshal(b.Val)
 }
