@@ -75,7 +75,7 @@ func ConvertToAst(rawExpression interface{}) (eval.Expression, error) {
 			if err != nil {
 				return nil, err
 			}
-			return eval.And{Args: parsedArgs}, nil
+			return eval.Or{Args: parsedArgs}, nil
 		},
 		"if": func(exp interface{}) (eval.Expression, error) {
 			parsedArgs, err := ParseMap(exp, []string{"condition", "then", "else"})

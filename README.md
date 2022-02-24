@@ -4,7 +4,7 @@ A JSON-based rules engine in Go.
 
 ## Why?
 
-This is an educational exercise. As such, I didn't think _too_ deeply about the problem I'm solving, but...
+This is an educational exercise. As such, I didn't think _too_ hard about the problem I'm solving, but...
 
 This can be used to store configuration data when you require something more dynamic than a static key/value mapping. Feature flags are one use case for something like this.
 
