@@ -7,20 +7,28 @@ import (
 
 type ExpressionParser func(interface{}) (eval.Expression, error)
 
+func ParseArgList(arg interface{}) ([]eval.Expression, error) {
+	args, ok := arg.([]interface{})
+	if !ok {
+		return nil, fmt.Errorf("cannot parse %v as a list", arg)
+	}
+	parsedArgs := []eval.Expression{}
+	for _, arg := range args {
+		parsedArg, err := ConvertToAst(arg)
+		if err != nil {
+			return nil, err
+		}
+		parsedArgs = append(parsedArgs, parsedArg)
+	}
+	return parsedArgs, nil
+}
+
 func ConvertToAst(rawExpression interface{}) (eval.Expression, error) {
 	var keywords = map[string]ExpressionParser{
 		"eq": func(exp interface{}) (eval.Expression, error) {
-			args, ok := exp.([]interface{})
-			if !ok {
-				return nil, fmt.Errorf("argument to eq operator should be an array, instead got: %v", exp)
-			}
-			parsedArgs := []eval.Expression{}
-			for _, arg := range args {
-				parsedArg, err := ConvertToAst(arg)
-				if err != nil {
-					return nil, err
-				}
-				parsedArgs = append(parsedArgs, parsedArg)
+			parsedArgs, err := ParseArgList(exp)
+			if err != nil {
+				return nil, err
 			}
 			return eval.Eq{Args: parsedArgs}, nil
 		},
@@ -36,32 +44,16 @@ func ConvertToAst(rawExpression interface{}) (eval.Expression, error) {
 			return eval.ContextExpression{Key: arg}, nil
 		},
 		"and": func(exp interface{}) (eval.Expression, error) {
-			args, ok := exp.([]interface{})
-			if !ok {
-				return nil, fmt.Errorf("argument to and operator should be an array, instead got: %v", exp)
-			}
-			parsedArgs := []eval.Expression{}
-			for _, arg := range args {
-				parsedArg, err := ConvertToAst(arg)
-				if err != nil {
-					return nil, err
-				}
-				parsedArgs = append(parsedArgs, parsedArg)
+			parsedArgs, err := ParseArgList(exp)
+			if err != nil {
+				return nil, err
 			}
 			return eval.And{Args: parsedArgs}, nil
 		},
 		"or": func(exp interface{}) (eval.Expression, error) {
-			args, ok := exp.([]interface{})
-			if !ok {
-				return nil, fmt.Errorf("argument to or operator should be an array, instead got: %v", exp)
-			}
-			parsedArgs := []eval.Expression{}
-			for _, arg := range args {
-				parsedArg, err := ConvertToAst(arg)
-				if err != nil {
-					return nil, err
-				}
-				parsedArgs = append(parsedArgs, parsedArg)
+			parsedArgs, err := ParseArgList(exp)
+			if err != nil {
+				return nil, err
 			}
 			return eval.And{Args: parsedArgs}, nil
 		},
