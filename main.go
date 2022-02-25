@@ -24,13 +24,14 @@ func (ec EvalCommand) Name() string {
 }
 
 func (c EvalCommand) Run(args []string) int {
-	var ruleStrArg, ruleFileStr, contextStr string
+	var ruleStrArg, ruleFileArg, contextStrArg, contextFileArg string
 	var verbose bool
 
 	flagSet := flag.NewFlagSet(c.Name(), flag.ContinueOnError)
 	flagSet.StringVar(&ruleStrArg, "rule", "", "")
-	flagSet.StringVar(&ruleFileStr, "rule-file", "", "")
-	flagSet.StringVar(&contextStr, "context", "", "")
+	flagSet.StringVar(&ruleFileArg, "rule-file", "", "")
+	flagSet.StringVar(&contextStrArg, "context", "", "")
+	flagSet.StringVar(&contextFileArg, "context-file", "", "")
 	flagSet.BoolVar(&verbose, "verbose", false, "")
 	flagSet.Parse(args)
 
@@ -39,19 +40,29 @@ func (c EvalCommand) Run(args []string) int {
 		logger.SetOutput(ioutil.Discard)
 	}
 
-	if ruleStrArg == "" && ruleFileStr == "" {
+	if ruleStrArg == "" && ruleFileArg == "" {
 		logger.Fatalf("either rule or rule-file must be specified")
 	}
 
-	var ruleStr string
+	var ruleStr, contextStr string
 	if ruleStrArg != "" {
 		ruleStr = ruleStrArg
 	} else {
-		ruleFileContents, err := os.ReadFile(ruleFileStr)
+		ruleFileContents, err := os.ReadFile(ruleFileArg)
 		if err != nil {
-			logger.Fatalf("error opening error file: %v", err)
+			logger.Fatalf("error opening rule file: %v", err)
 		}
 		ruleStr = string(ruleFileContents)
+	}
+
+	if contextStrArg != "" {
+		contextStr = contextStrArg
+	} else {
+		contextFileContents, err := os.ReadFile(contextFileArg)
+		if err != nil {
+			logger.Fatalf("error opening context file: %v", err)
+		}
+		contextStr = string(contextFileContents)
 	}
 
 	logger.Printf("evaluating: %v", ruleStr)
@@ -108,6 +119,9 @@ toga eval -rule=<rule-json> -context=<context-json>
 
   -context <context-json>
   The JSON context to use to evaluate the rule (default '{}')
+
+  -context-file <context-file-path>
+  The path to a JSON file containing the context to use to evaluate the rule against
 
   -verbose
   Whether to output verbose logging to stderr
