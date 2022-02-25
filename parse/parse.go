@@ -113,7 +113,7 @@ func ParseContext(rawContext map[string]interface{}) (eval.Context, error) {
 	for key, val := range rawContext {
 		expr, err := ConvertToAst(val)
 		if err != nil {
-			return nil, fmt.Errorf("error parsing context key %v. error: %v", key, err)
+			return nil, fmt.Errorf("error parsing context key %v. error: %w", key, err)
 		}
 		parsedContext[key] = expr
 	}

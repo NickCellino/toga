@@ -24,11 +24,12 @@ func (ec EvalCommand) Name() string {
 }
 
 func (c EvalCommand) Run(args []string) int {
-	var ruleStr, contextStr string
+	var ruleStrArg, ruleFileStr, contextStr string
 	var verbose bool
 
 	flagSet := flag.NewFlagSet(c.Name(), flag.ContinueOnError)
-	flagSet.StringVar(&ruleStr, "rule", "", "")
+	flagSet.StringVar(&ruleStrArg, "rule", "", "")
+	flagSet.StringVar(&ruleFileStr, "rule-file", "", "")
 	flagSet.StringVar(&contextStr, "context", "", "")
 	flagSet.BoolVar(&verbose, "verbose", false, "")
 	flagSet.Parse(args)
@@ -37,6 +38,22 @@ func (c EvalCommand) Run(args []string) int {
 	if !verbose {
 		logger.SetOutput(ioutil.Discard)
 	}
+
+	if ruleStrArg == "" && ruleFileStr == "" {
+		logger.Fatalf("either rule or rule-file must be specified")
+	}
+
+	var ruleStr string
+	if ruleStrArg != "" {
+		ruleStr = ruleStrArg
+	} else {
+		ruleFileContents, err := os.ReadFile(ruleFileStr)
+		if err != nil {
+			logger.Fatalf("error opening error file: %v", err)
+		}
+		ruleStr = string(ruleFileContents)
+	}
+
 	logger.Printf("evaluating: %v", ruleStr)
 	var rule interface{}
 	err := json.Unmarshal([]byte(ruleStr), &rule)
@@ -64,7 +81,7 @@ func (c EvalCommand) Run(args []string) int {
 
 	value, err := ruleExpression.Eval(contextExpression)
 	if err != nil {
-		logger.Fatalf("received error: %v\n", err)
+		logger.Fatalf("rule evaluation error: %v\n", err)
 	}
 	logger.Printf("output: %v\n", value)
 
@@ -84,7 +101,10 @@ toga eval -rule=<rule-json> -context=<context-json>
   Evaluates the provided rule.
 
   -rule <rule-json>
-  The JSON rule to evaluate
+  The JSON rule to evaluate (either -rule or -rule-file must be specified)
+
+  -rule-file <rule-file-path>
+  The path to a JSON file containing the rule to evaluate (either -rule or -rule-file must be specified)
 
   -context <context-json>
   The JSON context to use to evaluate the rule (default '{}')
