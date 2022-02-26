@@ -96,6 +96,42 @@ func ConvertToAst(rawExpression interface{}) (eval.Expression, error) {
 					return first < second
 				}}, nil
 		},
+		"lte": func(exp interface{}) (eval.Expression, error) {
+			parsedArgs, err := ParseMap(exp, []string{"first", "second"})
+			if err != nil {
+				return nil, err
+			}
+			return eval.ComparisonOperator{
+				First:  parsedArgs["first"],
+				Second: parsedArgs["second"],
+				Comparer: func(first, second float64) bool {
+					return first <= second
+				}}, nil
+		},
+		"gt": func(exp interface{}) (eval.Expression, error) {
+			parsedArgs, err := ParseMap(exp, []string{"first", "second"})
+			if err != nil {
+				return nil, err
+			}
+			return eval.ComparisonOperator{
+				First:  parsedArgs["first"],
+				Second: parsedArgs["second"],
+				Comparer: func(first, second float64) bool {
+					return first > second
+				}}, nil
+		},
+		"gte": func(exp interface{}) (eval.Expression, error) {
+			parsedArgs, err := ParseMap(exp, []string{"first", "second"})
+			if err != nil {
+				return nil, err
+			}
+			return eval.ComparisonOperator{
+				First:  parsedArgs["first"],
+				Second: parsedArgs["second"],
+				Comparer: func(first, second float64) bool {
+					return first >= second
+				}}, nil
+		},
 	}
 
 	switch expression := rawExpression.(type) {
