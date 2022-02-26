@@ -1,0 +1,12 @@
+{
+  "if": {
+    "condition": {
+      "lt": {
+        "first": {"context": "bet"},
+        "second": 500
+      }
+    },
+    "then": "low roller",
+    "else": "high roller"
+  }
+}

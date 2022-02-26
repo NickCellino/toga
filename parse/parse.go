@@ -84,6 +84,18 @@ func ConvertToAst(rawExpression interface{}) (eval.Expression, error) {
 			}
 			return eval.If{Condition: parsedArgs["condition"], Then: parsedArgs["then"], Else: parsedArgs["else"]}, nil
 		},
+		"lt": func(exp interface{}) (eval.Expression, error) {
+			parsedArgs, err := ParseMap(exp, []string{"first", "second"})
+			if err != nil {
+				return nil, err
+			}
+			return eval.ComparisonOperator{
+				First:  parsedArgs["first"],
+				Second: parsedArgs["second"],
+				Comparer: func(first, second float64) bool {
+					return first < second
+				}}, nil
+		},
 	}
 
 	switch expression := rawExpression.(type) {
