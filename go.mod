@@ -4,6 +4,10 @@ go 1.17
 
 require github.com/mitchellh/cli v1.1.2
 
+replace github.com/NickCellino/toga/parse => ./parse
+
+replace github.com/NickCellino/toga/eval => ./eval
+
 require (
 	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/semver v1.5.0 // indirect

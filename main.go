@@ -7,8 +7,10 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"toga/eval"
-	"toga/parse"
+
+	"github.com/NickCellino/toga/parse"
+
+	"github.com/NickCellino/toga/eval"
 
 	"github.com/mitchellh/cli"
 )

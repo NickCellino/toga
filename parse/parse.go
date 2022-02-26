@@ -2,7 +2,8 @@ package parse
 
 import (
 	"fmt"
-	"toga/eval"
+
+	"github.com/NickCellino/toga/eval"
 )
 
 type ExpressionParser func(interface{}) (eval.Expression, error)
