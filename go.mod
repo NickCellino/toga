@@ -1,4 +1,4 @@
-module toga
+module github.com/NickCellino/toga
 
 go 1.17
 
