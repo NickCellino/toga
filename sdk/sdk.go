@@ -9,7 +9,7 @@ import (
 	"github.com/NickCellino/toga/parse"
 )
 
-func EvalRuleFile(path string, context map[string]interface{}, value *interface{}) error {
+func EvalRuleFile(path string, context map[string]interface{}, value interface{}) error {
 	ruleFileContents, err := os.ReadFile(path)
 	if err != nil {
 		return fmt.Errorf("error opening rule file: %w", err)
@@ -36,13 +36,20 @@ func EvalRuleFile(path string, context map[string]interface{}, value *interface{
 		return fmt.Errorf("rule evaluation error: %w", err)
 	}
 
-	expectedKind := reflect.TypeOf(*value).Kind()
+	reflectedValue := reflect.ValueOf(value)
+	if reflectedValue.Kind() != reflect.Ptr {
+		return fmt.Errorf("value must be a pointer")
+	}
+	expectedKind := reflect.Indirect(reflectedValue).Kind()
 	if expectedKind == reflect.Bool {
-		*value, _ = evaledRule.AsBool()
+		boolValue, _ := value.(*bool)
+		*boolValue, _ = evaledRule.AsBool()
 	} else if expectedKind == reflect.Float64 {
-		*value, _ = evaledRule.AsNumber()
+		numberValue, _ := value.(*float64)
+		*numberValue, _ = evaledRule.AsNumber()
 	} else if expectedKind == reflect.String {
-		*value, _ = evaledRule.AsString()
+		stringValue, _ := value.(*string)
+		*stringValue, _ = evaledRule.AsString()
 	} else {
 		return fmt.Errorf("value passed in should be either *bool, *float64 or *string")
 	}
