@@ -70,4 +70,4 @@ $ ./toga eval -rule-file rule.json -context '{"accountAge": 999.0}'
 To use this library within your Go code, the main interface is in the sdk package. The functionality is exposed through the `EvalRuleFile` function. See the [todo-list application](./examples/todo-app/) for a full working example.
 
 ## Examples
-See the [examples](./examples) folder for some usage examples. There is a small [todo-list application](./examples/todo-app/) which shows how you can use this in a Go application.
+See the [examples](./examples) folder for some usage examples. 
