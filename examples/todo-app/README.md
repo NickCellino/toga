@@ -4,7 +4,7 @@ This is a simple CLI todo app that demonstrates how toga can be used in an appli
 
 The todo app allows you to create a list of Todo items and toggle their "done" status.
 
-![Basic usage demo](demos/basic-usage.gif)
+![Basic usage demo](demos/toga-todo.gif)
 
 Our todo app also has a brand-new feature for removing todo items. Since this is a brand new feature, we want to roll it out to users gradually. For now, we will only show this feature to users who have explicitly opted-in to experimental features and who are known to be loyal users.
 
@@ -46,4 +46,4 @@ In a real application, `context` would likely be determined based on some proper
 
 With these hardcoded values, you can see that the "remove item" feature is enabled:
 
-![Remove item usage demo](demos/remove-item.gif)
+![Remove item usage demo](demos/toga-todo-remove.gif)
