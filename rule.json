@@ -1,0 +1,12 @@
+{
+  "if": {
+    "condition": {
+      "gt": {
+        "first": {"context": "accountAge"},
+        "second": 365.0 
+      }
+    },
+    "then": "Hello, old friend!",
+    "else": "Welcome, new friend!"
+  }
+}

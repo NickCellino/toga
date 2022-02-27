@@ -26,6 +26,8 @@ $ ./toga eval -rule '{"eq": [{"context": "beta"}, true]}' -context '{"beta": fal
 false
 ```
 
+### More complex rules
+
 You can also use if/then logic in your rules and return things other than booleans.
 
 ```bash
@@ -37,6 +39,35 @@ $ ./toga eval -rule '{"if": {"condition": {"gt": { "first": {"context": "account
 $ ./toga eval -rule '{"if": {"condition": {"gt": { "first": {"context": "accountAge"}, "second": 365.0 }}, "then": "Hello, old friend!", "else": "Welcome, new friend!" } }' -context '{"accountAge": 12.0}' 
 "Welcome, new friend!"
 ```
+
+### Rule files
+
+Sometimes, you may want to read a rule from a file instead of specifying it directly as a string. To do so, you can use the `rule-file` parameter like so:
+
+```bash
+$ cat << EOF >> rule.json
+{
+  "if": {
+    "condition": {
+      "gt": {
+        "first": {"context": "accountAge"},
+        "second": 365.0 
+      }
+    },
+    "then": "Hello, old friend!",
+    "else": "Welcome, new friend!"
+  }
+}
+EOF
+$ ./toga eval -rule-file rule.json -context '{"accountAge": 12.0}'
+"Welcome, new friend!"
+$ ./toga eval -rule-file rule.json -context '{"accountAge": 999.0}'
+"Hello, old friend!"
+```
+
+## Go API
+
+To use this library within your Go code, the main interface is in the sdk package. The functionality is exposed through the `EvalRuleFile` function. See the [todo-list application](./examples/todo-app/) for a full working example.
 
 ## Examples
 See the [examples](./examples) folder for some usage examples. There is a small [todo-list application](./examples/todo-app/) which shows how you can use this in a Go application.
