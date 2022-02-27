@@ -1,6 +1,11 @@
 {
-  "eq": [
-    {"context": "region"},
-    "buffalo"
+  "and": [
+    { "context": "showExperimentalFeatures" },
+    {
+      "gt": {
+        "first": { "context": "loyaltyScore" },
+        "second": 75
+      }
+    }
   ]
 }

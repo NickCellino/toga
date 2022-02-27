@@ -89,9 +89,9 @@ func main() {
 			todoItem.Done = !todoItem.Done
 		},
 	})
-	regionVar := os.Getenv("REGION")
 	context := map[string]interface{}{
-		"region": regionVar,
+		"showExperimentalFeatures": true,
+		"loyaltyScore":             89.0,
 	}
 	removeItemEnabled := false
 	err := sdk.EvalRuleFile("allow-remove-item.json", context, &removeItemEnabled)
