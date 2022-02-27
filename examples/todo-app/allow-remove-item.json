@@ -1,0 +1,6 @@
+{
+  "eq": [
+    {"context": "region"},
+    "buffalo"
+  ]
+}
