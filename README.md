@@ -26,5 +26,17 @@ $ ./toga eval -rule '{"eq": [{"context": "beta"}, true]}' -context '{"beta": fal
 false
 ```
 
+You can also use if/then logic in your rules and return things other than booleans.
+
+```bash
+$ ./toga eval -rule '{"if": {"condition": {"gt": { "first": {"context": "accountAge"}, "second": 365.0 }}, "then": "Hello, old friend!", "else": "Welcome, new friend!" } }' -context '{"accountAge": 400.0}'
+"Hello, old friend!"
+```
+
+```bash
+$ ./toga eval -rule '{"if": {"condition": {"gt": { "first": {"context": "accountAge"}, "second": 365.0 }}, "then": "Hello, old friend!", "else": "Welcome, new friend!" } }' -context '{"accountAge": 12.0}' 
+"Welcome, new friend!"
+```
+
 ## Examples
 See the [examples](./examples) folder for some usage examples. There is a small [todo-list application](./examples/todo-app/) which shows how you can use this in a Go application.
