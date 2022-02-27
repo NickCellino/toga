@@ -27,3 +27,6 @@ true
 $ ./toga eval -rule '{"eq": [{"context": "beta"}, true]}' -context '{"beta": false}'
 false
 ```
+
+## Examples
+See the [examples](./examples) folder for some usage examples. There is a small [todo-list application](./examples/todo-app/) which shows how you can use this in a Go application.
