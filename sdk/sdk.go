@@ -43,15 +43,18 @@ func EvalRuleFile(path string, context map[string]interface{}, value interface{}
 	expectedKind := reflect.Indirect(reflectedValue).Kind()
 	if expectedKind == reflect.Bool {
 		boolValue, _ := value.(*bool)
-		*boolValue, _ = evaledRule.AsBool()
+		*boolValue, err = evaledRule.AsBool()
 	} else if expectedKind == reflect.Float64 {
 		numberValue, _ := value.(*float64)
-		*numberValue, _ = evaledRule.AsNumber()
+		*numberValue, err = evaledRule.AsNumber()
 	} else if expectedKind == reflect.String {
 		stringValue, _ := value.(*string)
-		*stringValue, _ = evaledRule.AsString()
+		*stringValue, err = evaledRule.AsString()
 	} else {
 		return fmt.Errorf("value passed in should be either *bool, *float64 or *string")
+	}
+	if err != nil {
+		return fmt.Errorf("error: %v", err)
 	}
 
 	return nil
