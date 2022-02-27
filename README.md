@@ -77,6 +77,7 @@ EOF
 
 $ ./consul-template -template rule-a.tpl:rule-a.json
 
+# Return true if accountAge > 365
 $ consul kv put rule_a '{ "gt": { "first": { "context": "accountAge" }, "second": 365.0 } }'
 
 $ ./toga eval -rule-file rule.json -context '{"accountAge": 300.0}'
