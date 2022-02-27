@@ -38,8 +38,8 @@ In our code, we use the toga SDK and this rule file to decide whether to show th
 		fmt.Printf("error calling toga sdk: %v\n", err)
 	}
 	if removeItemEnabled {
-		commandRegistry.RegisterCommand(3, Command{
-      ...
+		// Enable the "remove item" command
+		...
 ```
 
 In a real application, `context` would likely be determined based on some properties of the user and the context in which they are using the application. This information can be pulled from anywhere, including a database or an external API.
