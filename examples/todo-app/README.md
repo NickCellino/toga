@@ -6,11 +6,12 @@ The todo app allows you to create a list of Todo items and toggle their "done" s
 
 ![Basic usage demo](demos/basic-usage.gif)
 
-Our todo app also has a brand-new feature for removing todo items. Since this is a brand new feature, we want to roll it out to users gradually. For now, we will only show this feature to users who have explicitly opted in to experimental features and who are known to be loyal users.
+Our todo app also has a brand-new feature for removing todo items. Since this is a brand new feature, we want to roll it out to users gradually. For now, we will only show this feature to users who have explicitly opted-in to experimental features and who are known to be loyal users.
 
 We can accomplish this using a rule file like so:
 
 ```javascript
+// allow-remove-item.json
 {
   "and": [
     { "context": "showExperimentalFeatures" },
